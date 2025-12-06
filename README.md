@@ -1,220 +1,278 @@
-# Dog Breed Classification with ResNet50
+# 🐕 What DAWG!? - Dog Breed Classifier
 
-A deep learning project for classifying 120 dog breeds using ResNet50 transfer learning on ImageNet dog breed dataset.
+<p align="center">
+  <img src="static/logo.png" alt="What DAWG!? Logo" width="200">
+</p>
 
-## Project Structure
+<p align="center">
+  <strong>ระบบจำแนกสายพันธุ์สุนัขด้วย Deep Learning</strong><br>
+  รองรับ 120 สายพันธุ์ | ภาษาไทย/อังกฤษ | ข้อมูลสายพันธุ์ครบถ้วน
+</p>
+
+---
+
+## 📋 สารบัญ
+
+- [Features](#-features)
+- [Demo](#-demo)
+- [การติดตั้ง](#-การติดตั้ง)
+- [การใช้งาน](#-การใช้งาน)
+- [โครงสร้างโปรเจค](#-โครงสร้างโปรเจค)
+- [Tech Stack](#-tech-stack)
+- [Model Performance](#-model-performance)
+
+---
+
+## ✨ Features
+
+| Feature | รายละเอียด |
+|---------|-----------|
+| 🎯 **จำแนกสายพันธุ์** | รองรับ 120 สายพันธุ์สุนัข ด้วย ResNet50 |
+| 📊 **Top-5 Predictions** | แสดงผลลัพธ์ 5 อันดับแรกพร้อม % ความมั่นใจ |
+| 🌐 **2 ภาษา** | รองรับภาษาไทยและอังกฤษ สลับได้ทันที |
+| 📖 **ข้อมูลสายพันธุ์** | นิสัย, ขนาด, น้ำหนัก, อายุขัย (283 สายพันธุ์) |
+| 💬 **ระบบ Feedback** | ผู้ใช้สามารถแก้ไขผลลัพธ์เพื่อปรับปรุงโมเดล |
+| 📱 **Responsive** | ใช้งานได้ทุกอุปกรณ์ |
+
+---
+
+## 🎬 Demo
+
+<p align="center">
+  <img src="docs/demo.gif" alt="Demo" width="600">
+</p>
+
+**ลองใช้งาน:** อัปโหลดรูปสุนัข → รับผลการจำแนกสายพันธุ์ทันที!
+
+---
+
+## 🚀 การติดตั้ง
+
+### ความต้องการของระบบ
+
+- Python 3.9+
+- RAM อย่างน้อย 4GB
+- พื้นที่ดิสก์ ~500MB (รวมโมเดล)
+
+### ขั้นตอนการติดตั้ง
+
+#### 1. Clone Repository
+
+```bash
+git clone https://github.com/iamcheesez/CS461.git
+cd CS461
+```
+
+#### 2. สร้าง Virtual Environment (แนะนำ)
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 3. ติดตั้ง Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. ตรวจสอบไฟล์ที่จำเป็น
+
+ตรวจสอบว่ามีไฟล์เหล่านี้:
+
+```
+models/
+├── best_model.pth        # โมเดลที่ train แล้ว (~100MB)
+└── class_mapping.json    # Mapping ของ class
+
+breed_info_en.json        # ข้อมูลสายพันธุ์ (EN)
+breed_info_th.json        # ข้อมูลสายพันธุ์ (TH)
+
+static/
+└── logo.png              # โลโก้เว็บ
+```
+
+---
+
+## 💻 การใช้งาน
+
+### วิธีที่ 1: รันเว็บแอป (แนะนำ)
+
+```bash
+python app.py
+```
+
+จากนั้นเปิด Browser ไปที่: **http://localhost:5000**
+
+### วิธีที่ 2: ใช้ Command Line
+
+```bash
+# ทำนายรูปเดียว
+python predict.py path/to/dog_image.jpg
+
+# ทำนายหลายรูป
+python predict.py image1.jpg image2.jpg image3.jpg
+```
+
+### วิธีที่ 3: ใช้ใน Python Script
+
+```python
+from app import DogBreedPredictor
+
+# สร้าง predictor
+predictor = DogBreedPredictor()
+
+# ทำนาย
+results = predictor.predict("path/to/dog.jpg", top_k=5)
+
+for breed, confidence in results:
+    print(f"{breed}: {confidence:.2%}")
+```
+
+---
+
+## 📁 โครงสร้างโปรเจค
 
 ```
 CS461/
-├── annotations/           # XML annotations (not used for classification)
-├── images/               # Dog breed images organized by breed
-│   └── Images/
-│       ├── n02085620-Chihuahua/
-│       ├── n02085782-Japanese_spaniel/
-│       └── ... (120 breeds total)
-├── models/               # Saved models and training artifacts (created during training)
-├── dataset.py            # Dataset loader and preprocessing
-├── train.py              # Model training script
-├── predict.py            # Inference script
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
+├── 📜 app.py                  # Flask Web Application
+├── 📜 wsgi.py                 # WSGI entry point (production)
+├── 📜 train.py                # Script สำหรับ train โมเดล
+├── 📜 predict.py              # CLI prediction
+├── 📜 dataset.py              # Dataset loader
+├── 📜 config.py               # Configuration
+├── 📜 retrain.py              # Retrain ด้วย feedback data
+│
+├── 📂 models/
+│   ├── best_model.pth         # Trained model weights
+│   ├── class_mapping.json     # Class index mapping
+│   └── training_history.json  # Training metrics
+│
+├── 📂 templates/
+│   └── index.html             # Frontend (HTML/CSS/JS)
+│
+├── 📂 static/
+│   └── logo.png               # Logo image
+│
+├── 📂 uploads/                # Uploaded images (temp)
+├── 📂 feedback_data/          # User feedback data
+│
+├── 📜 breed_info_en.json      # Breed info (English)
+├── 📜 breed_info_th.json      # Breed info (Thai)
+│
+├── 📜 requirements.txt        # Dependencies
+├── 📜 requirements-prod.txt   # Production dependencies
+├── 📜 Dockerfile              # Docker build
+├── 📜 docker-compose.yml      # Docker Compose
+├── 📜 Procfile                # Heroku/Railway
+└── 📜 README.md               # This file
 ```
 
-## Dataset
+---
 
-- **120 dog breeds** from ImageNet
-- Images organized in breed-specific folders
-- Automatic 80/20 train/validation split
-- Data augmentation applied during training
+## 🛠 Tech Stack
 
-## Requirements
+| Category | Technology |
+|----------|------------|
+| **Backend** | Python, Flask |
+| **Deep Learning** | PyTorch, ResNet50 |
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **Dataset** | Stanford Dogs (120 breeds) |
 
-Install the required packages:
+---
+
+## 📊 Model Performance
+
+| Metric | Value |
+|--------|-------|
+| **Architecture** | ResNet50 (Transfer Learning) |
+| **Training Epochs** | 20 |
+| **Training Accuracy** | 77.06% |
+| **Validation Accuracy** | 74.03% |
+| **Top-5 Accuracy** | ~95% |
+| **Number of Classes** | 120 breeds |
+
+---
+
+## 🔧 การ Train โมเดลใหม่
+
+หากต้องการ train โมเดลใหม่:
 
 ```bash
-pip install -r requirements.txt
-```
-
-### Key Dependencies:
-- PyTorch >= 2.0.0
-- torchvision >= 0.15.0
-- Pillow >= 9.0.0
-- numpy, matplotlib, scikit-learn, tqdm
-
-## Training the Model
-
-### Basic Training
-
-```bash
+# ต้องมีรูปภาพใน images/Images/
 python train.py
 ```
 
-This will:
-1. Load and split the dataset (80% train, 20% validation)
-2. Initialize ResNet50 with ImageNet pre-trained weights
-3. Train for 20 epochs with data augmentation
-4. Save the best model to `models/best_model.pth`
-5. Save training history and curves
-
-### Training Configuration
-
-You can modify these parameters in `train.py`:
+### การตั้งค่า Training (config.py)
 
 ```python
-DATA_DIR = "images/Images"      # Path to images folder
-BATCH_SIZE = 32                  # Batch size (adjust based on GPU memory)
-NUM_EPOCHS = 20                  # Number of training epochs
-LEARNING_RATE = 0.001            # Initial learning rate
-NUM_WORKERS = 4                  # Data loader workers
+BATCH_SIZE = 32
+NUM_EPOCHS = 20
+LEARNING_RATE = 0.001
 ```
 
-### Training Features
+---
 
-- **Transfer Learning**: Uses pre-trained ResNet50 from ImageNet
-- **Data Augmentation**: Random crops, flips, rotation, color jitter
-- **Learning Rate Scheduling**: Reduces LR on plateau
-- **Model Checkpointing**: Saves best and latest models
-- **Training Visualization**: Plots loss and accuracy curves
+## 🌐 การ Deploy
 
-### Expected Training Time
+ดูคู่มือละเอียดที่ [DEPLOYMENT.md](DEPLOYMENT.md)
 
-- **GPU (NVIDIA RTX 3080)**: ~2-3 hours for 20 epochs
-- **GPU (NVIDIA T4)**: ~4-5 hours for 20 epochs
-- **CPU**: Not recommended (very slow)
-
-## Model Architecture
-
-- **Base**: ResNet50 pre-trained on ImageNet
-- **Modified**: Final fully connected layer replaced for 120-class classification
-- **Input Size**: 224x224 RGB images
-- **Output**: Probability distribution over 120 dog breeds
-
-## Making Predictions
-
-### Predict Single Image
+### Quick Deploy with Docker
 
 ```bash
-python predict.py --image path/to/dog_image.jpg
+docker-compose up -d --build
 ```
 
-### Predict Multiple Images
+### Deploy to Railway (ฟรี)
 
-```bash
-python predict.py --image path/to/image_folder/
-```
+1. Push code to GitHub
+2. ไปที่ [railway.app](https://railway.app)
+3. New Project → Deploy from GitHub
+4. เลือก repo นี้ → Deploy!
 
-### Prediction Options
+---
 
-```bash
-python predict.py \
-    --image path/to/image.jpg \
-    --model models/best_model.pth \
-    --classes models/class_mapping.json \
-    --top-k 5 \
-    --device cuda
-```
+## 📝 API Endpoints
 
-**Arguments:**
-- `--image`: Path to image file or directory (required)
-- `--model`: Path to trained model checkpoint (default: `models/best_model.pth`)
-- `--classes`: Path to class mapping JSON (default: `models/class_mapping.json`)
-- `--top-k`: Number of top predictions to show (default: 5)
-- `--device`: Device to use (`cuda` or `cpu`, default: `cuda`)
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | หน้าเว็บหลัก |
+| `/predict` | POST | ทำนายสายพันธุ์ (upload image) |
+| `/breeds` | GET | รายชื่อสายพันธุ์ทั้งหมด |
+| `/breed-info/<name>` | GET | ข้อมูลสายพันธุ์ |
+| `/feedback` | POST | ส่ง feedback |
+| `/language` | GET/POST | ตั้งค่าภาษา |
+| `/health` | GET | Health check |
 
-### Example Output
+---
 
-```
-Using device: cuda
-Loaded 120 breed classes
-Model loaded from models/best_model.pth
-Model validation accuracy: 85.42%
+## 🤝 Contributing
 
-============================================================
-Predicting breed for: test_image.jpg
-============================================================
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Top 5 predictions:
-  1. golden retriever              94.32%
-  2. Labrador retriever             3.21%
-  3. flat-coated retriever          1.15%
-  4. curly-coated retriever         0.82%
-  5. Chesapeake Bay retriever       0.31%
-```
+---
 
-## Training Results
+## 📄 License
 
-After training, you'll find these files in the `models/` directory:
+This project is for educational purposes (CS461 - Machine Learning).
 
-- `best_model.pth`: Model checkpoint with best validation accuracy
-- `latest_model.pth`: Latest model checkpoint
-- `class_mapping.json`: Mapping between class indices and breed names
-- `training_history.json`: Loss and accuracy for each epoch
-- `training_curves.png`: Visualization of training progress
+---
 
-## Data Augmentation
+## 👨‍💻 Author
 
-### Training Augmentations:
-- Random resized crop (224x224)
-- Random horizontal flip
-- Random rotation (±15 degrees)
-- Color jitter (brightness, contrast, saturation)
-- ImageNet normalization
+**iamcheesez** - [GitHub](https://github.com/iamcheesez)
 
-### Validation/Inference:
-- Resize to 256x256
-- Center crop to 224x224
-- ImageNet normalization
+---
 
-## Performance Tips
-
-1. **GPU Memory**: If you get out-of-memory errors, reduce `BATCH_SIZE` in `train.py`
-2. **Training Speed**: Increase `NUM_WORKERS` if you have a fast CPU and slow GPU
-3. **Accuracy**: Train for more epochs or fine-tune the learning rate
-4. **Overfitting**: Add dropout or increase data augmentation
-
-## Troubleshooting
-
-### Import Errors
-Make sure all dependencies are installed:
-```bash
-pip install -r requirements.txt
-```
-
-### CUDA Out of Memory
-Reduce batch size in `train.py`:
-```python
-BATCH_SIZE = 16  # or 8
-```
-
-### Slow Training
-- Use GPU if available
-- Increase `NUM_WORKERS` for data loading
-- Use smaller image size (modify transforms)
-
-### Low Accuracy
-- Train for more epochs
-- Adjust learning rate
-- Try different data augmentation strategies
-- Fine-tune more layers of ResNet50
-
-## Dog Breeds Included
-
-The model can classify 120 dog breeds including:
-- Chihuahua, Japanese spaniel, Maltese dog, Pekinese, Shih-Tzu
-- Beagle, Bloodhound, Golden retriever, Labrador retriever
-- German shepherd, Rottweiler, Doberman, Boxer
-- Husky, Malamute, Saint Bernard, Great Dane
-- And 100+ more breeds...
-
-## License
-
-This project uses the ImageNet dataset which has its own terms of use. Please ensure compliance with ImageNet's terms when using this code.
-
-## Future Improvements
-
-- [ ] Add confusion matrix visualization
-- [ ] Implement K-fold cross-validation
-- [ ] Try other architectures (EfficientNet, Vision Transformer)
-- [ ] Add Grad-CAM visualization for interpretability
-- [ ] Web interface for easy predictions
-- [ ] Mobile deployment (TensorFlow Lite, ONNX)
+<p align="center">
+  Made with ❤️ and 🐕
+</p>

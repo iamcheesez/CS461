@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2025-12-06T17:46:43.384693",
+    "image_id": "7a445b2a62ce4a1883a6098474e90ddc",
+    "original_filename": "7a445b2a62ce4a1883a6098474e90ddc_Worlds-Ugliest-Dog-Contest-winner-Wild-Thang-062424-1-16306bd4ca4b4f90b36e1d516074b7e0.png",
+    "is_correct": false,
+    "predicted_breed": "Lhasa",
+    "predicted_class_key": "n02098413-Lhasa",
+    "correct_breed": "Pekinese",
+    "correct_class_key": "n02086079-Pekinese",
+    "saved_for_training": true,
+    "training_path": "feedback_data\\images\\n02086079-Pekinese\\7a445b2a62ce4a1883a6098474e90ddc_20251206_174643.jpg"
+  },
+  {
+    "timestamp": "2025-12-06T17:47:53.799269",
+    "image_id": "4f0387287e0346ac9b07e1517ff25516",
+    "original_filename": "4f0387287e0346ac9b07e1517ff25516_88ff5600-d979-11ef-a5c8-1da73bd59591.jpg",
+    "is_correct": true,
+    "predicted_breed": "Labrador Retriever",
+    "predicted_class_key": "n02099712-Labrador_retriever",
+    "correct_breed": "Labrador Retriever",
+    "correct_class_key": "n02099712-Labrador_retriever",
+    "saved_for_training": true,
+    "training_path": "feedback_data\\images\\n02099712-Labrador_retriever\\4f0387287e0346ac9b07e1517ff25516_20251206_174753.jpg"
+  },
+  {
+    "timestamp": "2025-12-06T18:01:53.058767",
+    "image_id": "4d89baf1ae204596bd3daf15651c45b7",
+    "original_filename": "4d89baf1ae204596bd3daf15651c45b7_pexels-photo-1805164.png",
+    "is_correct": false,
+    "predicted_breed": "Pembroke",
+    "predicted_class_key": "n02113023-Pembroke",
+    "correct_breed": "Shetland Sheepdog",
+    "correct_class_key": "n02105855-Shetland_sheepdog",
+    "saved_for_training": true,
+    "training_path": "feedback_data\\images\\n02105855-Shetland_sheepdog\\4d89baf1ae204596bd3daf15651c45b7_20251206_180153.jpg"
+  },
+  {
+    "timestamp": "2025-12-06T19:18:10.270880",
+    "image_id": "9c07f736c614474b85e936ce0818b879",
+    "original_filename": "9c07f736c614474b85e936ce0818b879_88ff5600-d979-11ef-a5c8-1da73bd59591.jpg",
+    "is_correct": true,
+    "predicted_breed": "Labrador Retriever",
+    "predicted_class_key": "n02099712-Labrador_retriever",
+    "correct_breed": "Labrador Retriever",
+    "correct_class_key": "n02099712-Labrador_retriever",
+    "saved_for_training": true,
+    "training_path": "feedback_data\\images\\n02099712-Labrador_retriever\\9c07f736c614474b85e936ce0818b879_20251206_191810.jpg"
+  },
+  {
+    "timestamp": "2025-12-06T19:26:11.081700",
+    "image_id": "5ce77d081b92467ca49b92b2588a10c1",
+    "original_filename": "5ce77d081b92467ca49b92b2588a10c1_Worlds-Ugliest-Dog-Contest-winner-Wild-Thang-062424-1-16306bd4ca4b4f90b36e1d516074b7e0.png",
+    "is_correct": true,
+    "predicted_breed": "Lhasa",
+    "predicted_class_key": "n02098413-Lhasa",
+    "correct_breed": "Lhasa",
+    "correct_class_key": "n02098413-Lhasa",
+    "saved_for_training": true,
+    "training_path": "feedback_data\\images\\n02098413-Lhasa\\5ce77d081b92467ca49b92b2588a10c1_20251206_192611.jpg"
+  }
+]

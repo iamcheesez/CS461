@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Data files (large)
+annotations/
+images/
+*.tar
+*.zip
+
+# Local development
+uploads/*
+feedback_data/*
+!uploads/.gitkeep
+!feedback_data/.gitkeep
+
+# Documentation
+*.md
+!README.md
+PROJECT_OVERVIEW.txt
+
+# Test files
+test_*.py
+*_test.py
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Logs
+*.log

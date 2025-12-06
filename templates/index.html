@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>🐕 What DAWG!? - ระบุสายพันธุ์สุนัข</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #1a365d;
+            --primary-orange: #f97316;
+            --primary-cream: #f5f0e1;
+            --accent-orange: #ea580c;
+            --light-cream: #faf8f3;
+            --dark-navy: #0f172a;
+        }
+        
+        body {
+            background: var(--primary-cream);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            padding: 40px 20px;
+        }
+        
+        .card-main {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(26, 54, 93, 0.15);
+            overflow: hidden;
+        }
+        
+        .header-section {
+            background: var(--primary-cream);
+            color: var(--primary-navy);
+            padding: 30px 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .language-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .lang-btn {
+            background: var(--primary-navy);
+            border: 2px solid var(--primary-navy);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+        
+        .lang-btn.active {
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+        
+        .header-logo {
+            max-width: 320px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+        
+        .header-subtitle {
+            font-size: 1rem;
+            color: var(--primary-navy);
+            opacity: 0.8;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-navy);
+        }
+        
+        .header-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .upload-section {
+            padding: 40px;
+            background: white;
+        }
+        
+        .drop-zone {
+            border: 3px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--light-cream);
+        }
+        
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--primary-orange);
+            background: #fff7ed;
+            transform: scale(1.02);
+        }
+        
+        .drop-zone i {
+            font-size: 4rem;
+            color: var(--primary-orange);
+            margin-bottom: 20px;
+        }
+        
+        .drop-zone h4 {
+            color: var(--primary-navy);
+            margin-bottom: 10px;
+        }
+        
+        .drop-zone p {
+            color: #64748b;
+            margin-bottom: 0;
+        }
+        
+        .preview-container {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(26, 54, 93, 0.15);
+        }
+        
+        .btn-predict {
+            background: var(--primary-orange);
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+            background: var(--accent-orange);
+            color: white;
+        }
+        
+        .btn-predict:disabled {
+            background: #cbd5e1;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .results-section {
+            display: none;
+            padding: 40px;
+            background: var(--light-cream);
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.08);
+        }
+        
+        .top-result {
+            text-align: center;
+            padding: 30px;
+            background: var(--primary-navy);
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .top-result h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .top-result .confidence {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            color: var(--primary-orange);
+        }
+        
+        .prediction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: var(--light-cream);
+            transition: all 0.2s ease;
+        }
+        
+        .prediction-item:hover {
+            background: #fff7ed;
+        }
+        
+        .prediction-rank {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-navy);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        
+        .prediction-info {
+            flex: 1;
+        }
+        
+        .prediction-breed {
+            font-weight: 600;
+            color: var(--primary-navy);
+            margin-bottom: 5px;
+        }
+        
+        .prediction-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .prediction-bar-fill {
+            height: 100%;
+            background: var(--primary-orange);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .prediction-percent {
+            font-weight: 700;
+            color: var(--primary-orange);
+            min-width: 70px;
+            text-align: right;
+        }
+        
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-reset {
+            background: var(--primary-navy);
+            border: none;
+            padding: 10px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-reset:hover {
+            background: var(--dark-navy);
+            color: white;
+        }
+        
+        .feedback-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--light-cream);
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .feedback-title {
+            font-weight: 600;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+        }
+        
+        .feedback-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn-correct {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-correct:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+            color: white;
+        }
+        
+        .btn-wrong {
+            background: var(--primary-orange);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-wrong:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+            background: var(--accent-orange);
+            color: white;
+        }
+        
+        .btn-skip {
+            background: #94a3b8;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-skip:hover {
+            background: #64748b;
+            color: white;
+        }
+        
+        .correction-section {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .breed-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .breed-select:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+        }
+        
+        .feedback-success {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: var(--primary-navy);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .feedback-success i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Breed Info Section */
+        .breed-info-section {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-cream);
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .breed-info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .breed-info-header i {
+            font-size: 1.8rem;
+            color: var(--primary-orange);
+            margin-right: 12px;
+        }
+        
+        .breed-info-header h5 {
+            margin: 0;
+            color: var(--primary-navy);
+            font-weight: 700;
+        }
+        
+        .breed-info-content {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .breed-description {
+            color: #374151;
+            line-height: 1.7;
+            font-size: 1rem;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-orange);
+        }
+        
+        .breed-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .breed-stat-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08);
+            transition: transform 0.2s ease;
+        }
+        
+        .breed-stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .breed-stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .breed-stat-icon.life {
+            background: var(--primary-navy);
+            color: white;
+        }
+        
+        .breed-stat-icon.weight {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .breed-stat-icon.hypo {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .breed-stat-icon.hypo.no {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .breed-stat-info {
+            flex: 1;
+        }
+        
+        .breed-stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .breed-stat-value {
+            font-weight: 700;
+            color: var(--primary-navy);
+            font-size: 1.05rem;
+        }
+        
+        .no-breed-info {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .no-breed-info i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #9ca3af;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--primary-navy);
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 1.8rem;
+            }
+            
+            .upload-section, .results-section {
+                padding: 20px;
+            }
+            
+            .drop-zone {
+                padding: 40px 20px;
+            }
+            
+            .drop-zone i {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h4>กำลังวิเคราะห์รูปภาพ...</h4>
+            <p>กรุณารอสักครู่</p>
+        </div>
+    </div>
+    
+    <div class="container main-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="card-main">
+                    <!-- Header -->
+                    <div class="header-section">
+                        <!-- Language Toggle -->
+                        <div class="language-toggle">
+                            <button class="lang-btn active" data-lang="th" title="ภาษาไทย">
+                                🇹🇭 TH
+                            </button>
+                            <button class="lang-btn" data-lang="en" title="English">
+                                🇬🇧 EN
+                            </button>
+                        </div>
+                        <img src="/static/logo.png" alt="What DAWG!?" class="header-logo" id="headerLogo">
+                        <p class="header-subtitle" data-i18n="headerSubtitle">ระบบวิเคราะห์สายพันธุ์สุนัขด้วย AI - รองรับ 120 สายพันธุ์</p>
+                    </div>
+                    
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <div class="drop-zone" id="dropZone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h4>ลากและวางรูปภาพที่นี่</h4>
+                                <p>หรือคลิกเพื่อเลือกไฟล์ (JPG, PNG, GIF, WebP)</p>
+                                <input type="file" id="fileInput" name="file" accept="image/*" hidden>
+                            </div>
+                            
+                            <!-- Preview Container -->
+                            <div class="preview-container" id="previewContainer">
+                                <div class="text-center mb-4">
+                                    <img id="previewImage" class="preview-image" src="" alt="Preview">
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <button type="submit" class="btn btn-predict" id="predictBtn">
+                                        <i class="fas fa-search me-2"></i>วิเคราะห์สายพันธุ์
+                                    </button>
+                                    <button type="button" class="btn btn-reset" id="resetBtn">
+                                        <i class="fas fa-redo me-2"></i>เลือกรูปใหม่
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Results Section -->
+                    <div class="results-section" id="resultsSection">
+                        <div class="result-card">
+                            <div class="top-result" id="topResult">
+                                <i class="fas fa-trophy fa-2x mb-3"></i>
+                                <h2 id="topBreed">-</h2>
+                                <div class="confidence">ความมั่นใจ: <span id="topConfidence">-</span></div>
+                            </div>
+                            
+                            <!-- Breed Info Section -->
+                            <div class="breed-info-section" id="breedInfoSection" style="display: none;">
+                                <div class="breed-info-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <h5>ข้อมูลสายพันธุ์</h5>
+                                </div>
+                                <div class="breed-info-content">
+                                    <div class="breed-description" id="breedDescription">
+                                        <!-- Description will be inserted here -->
+                                    </div>
+                                    <div class="breed-stats">
+                                        <div class="breed-stat-card" id="lifeSpanCard">
+                                            <div class="breed-stat-icon life">
+                                                <i class="fas fa-heart-pulse"></i>
+                                            </div>
+                                            <div class="breed-stat-info">
+                                                <div class="breed-stat-label">อายุขัย</div>
+                                                <div class="breed-stat-value" id="breedLifeSpan">-</div>
+                                            </div>
+                                        </div>
+                                        <div class="breed-stat-card" id="weightCard">
+                                            <div class="breed-stat-icon weight">
+                                                <i class="fas fa-weight-scale"></i>
+                                            </div>
+                                            <div class="breed-stat-info">
+                                                <div class="breed-stat-label">น้ำหนัก</div>
+                                                <div class="breed-stat-value" id="breedWeight">-</div>
+                                            </div>
+                                        </div>
+                                        <div class="breed-stat-card" id="hypoCard">
+                                            <div class="breed-stat-icon hypo" id="hypoIcon">
+                                                <i class="fas fa-shield-dog"></i>
+                                            </div>
+                                            <div class="breed-stat-info">
+                                                <div class="breed-stat-label">ภูมิแพ้</div>
+                                                <div class="breed-stat-value" id="breedHypo">-</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="no-breed-info" id="noBreedInfo" style="display: none;">
+                                    <i class="fas fa-search"></i>
+                                    <p>ไม่พบข้อมูลเพิ่มเติมสำหรับสายพันธุ์นี้</p>
+                                </div>
+                            </div>
+                            
+                            <h5 class="mb-3"><i class="fas fa-list-ol me-2"></i>ผลการวิเคราะห์ Top 5</h5>
+                            <div id="predictionsList">
+                                <!-- Predictions will be inserted here -->
+                            </div>
+                            
+                            <!-- Feedback Section -->
+                            <div class="feedback-section" id="feedbackSection">
+                                <h5 class="feedback-title"><i class="fas fa-comment-dots me-2"></i>ช่วย AI เรียนรู้ - ผลการทำนายถูกต้องไหม?</h5>
+                                <div class="feedback-buttons" id="feedbackButtons">
+                                    <button type="button" class="btn btn-correct" id="btnCorrect">
+                                        <i class="fas fa-check me-2"></i>ถูกต้อง
+                                    </button>
+                                    <button type="button" class="btn btn-wrong" id="btnWrong">
+                                        <i class="fas fa-times me-2"></i>ไม่ถูกต้อง
+                                    </button>
+                                    <button type="button" class="btn btn-skip" id="btnSkip">
+                                        <i class="fas fa-forward me-2"></i>ข้าม
+                                    </button>
+                                </div>
+                                
+                                <!-- Correction Section (shown when user clicks "Wrong") -->
+                                <div class="correction-section" id="correctionSection">
+                                    <h6 class="mb-3"><i class="fas fa-edit me-2"></i>กรุณาเลือกสายพันธุ์ที่ถูกต้อง:</h6>
+                                    <select class="breed-select" id="breedSelect">
+                                        <option value="">-- เลือกสายพันธุ์ --</option>
+                                    </select>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <button type="button" class="btn btn-correct" id="btnSubmitCorrection">
+                                            <i class="fas fa-paper-plane me-2"></i>ส่ง Feedback
+                                        </button>
+                                        <button type="button" class="btn btn-skip" id="btnCancelCorrection">
+                                            <i class="fas fa-arrow-left me-2"></i>กลับ
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Success Message -->
+                                <div class="feedback-success" id="feedbackSuccess">
+                                    <i class="fas fa-heart"></i>
+                                    <h5>ขอบคุณสำหรับ Feedback!</h5>
+                                    <p class="mb-0">ข้อมูลของคุณจะช่วยให้ AI ฉลาดขึ้น</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="footer">
+                    <p><i class="fas fa-brain me-2"></i>Powered by ResNet50 Deep Learning Model</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ==================== Internationalization (i18n) ====================
+        const translations = {
+            th: {
+                pageTitle: '🐕 What DAWG!? - ระบุสายพันธุ์สุนัข',
+                headerTitle: 'What DAWG!?',
+                headerSubtitle: 'ระบบวิเคราะห์สายพันธุ์สุนัขด้วย AI - รองรับ 120 สายพันธุ์',
+                loadingTitle: 'กำลังวิเคราะห์รูปภาพ...',
+                loadingSubtitle: 'กรุณารอสักครู่',
+                dropZoneTitle: 'ลากและวางรูปภาพที่นี่',
+                dropZoneSubtitle: 'หรือคลิกเพื่อเลือกไฟล์ (JPG, PNG, GIF, WebP)',
+                analyzeBtn: 'วิเคราะห์สายพันธุ์',
+                resetBtn: 'เลือกรูปใหม่',
+                confidence: 'ความมั่นใจ',
+                breedInfoTitle: 'ข้อมูลสายพันธุ์',
+                lifeSpan: 'อายุขัย',
+                weight: 'น้ำหนัก',
+                allergy: 'ภูมิแพ้',
+                hypoallergenic: 'ไม่ก่อภูมิแพ้',
+                notHypoallergenic: 'อาจก่อภูมิแพ้',
+                noBreedInfo: 'ไม่พบข้อมูลเพิ่มเติมสำหรับสายพันธุ์นี้',
+                top5Results: 'ผลการวิเคราะห์ Top 5',
+                feedbackTitle: 'ช่วย AI เรียนรู้ - ผลการทำนายถูกต้องไหม?',
+                correctBtn: 'ถูกต้อง',
+                wrongBtn: 'ไม่ถูกต้อง',
+                skipBtn: 'ข้าม',
+                selectBreedTitle: 'กรุณาเลือกสายพันธุ์ที่ถูกต้อง:',
+                selectBreedPlaceholder: '-- เลือกสายพันธุ์ --',
+                submitFeedbackBtn: 'ส่ง Feedback',
+                backBtn: 'กลับ',
+                thankYouTitle: 'ขอบคุณสำหรับ Feedback!',
+                thankYouSubtitle: 'ข้อมูลของคุณจะช่วยให้ AI ฉลาดขึ้น',
+                skipFeedbackTitle: 'ข้ามการให้ Feedback',
+                skipFeedbackSubtitle: 'ไม่เป็นไร คุณสามารถลองอัพโหลดรูปใหม่ได้',
+                footer: 'Powered by ResNet50 Deep Learning Model',
+                alertSelectImage: 'กรุณาเลือกรูปภาพก่อน',
+                alertImageOnly: 'กรุณาเลือกไฟล์รูปภาพเท่านั้น',
+                alertSelectBreed: 'กรุณาเลือกสายพันธุ์ที่ถูกต้อง',
+                alertConnectionError: 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง',
+                alertFeedbackError: 'เกิดข้อผิดพลาดในการส่ง feedback',
+                years: 'ปี'
+            },
+            en: {
+                pageTitle: '🐕 What DAWG!?',
+                headerTitle: 'What DAWG!?',
+                headerSubtitle: 'AI-powered Dog Breed Analysis - Supports 120 breeds',
+                loadingTitle: 'Analyzing image...',
+                loadingSubtitle: 'Please wait',
+                dropZoneTitle: 'Drag and drop image here',
+                dropZoneSubtitle: 'or click to select file (JPG, PNG, GIF, WebP)',
+                analyzeBtn: 'Analyze Breed',
+                resetBtn: 'Select New Image',
+                confidence: 'Confidence',
+                breedInfoTitle: 'Breed Information',
+                lifeSpan: 'Life Span',
+                weight: 'Weight',
+                allergy: 'Allergy',
+                hypoallergenic: 'Hypoallergenic',
+                notHypoallergenic: 'May cause allergies',
+                noBreedInfo: 'No additional information available for this breed',
+                top5Results: 'Top 5 Analysis Results',
+                feedbackTitle: 'Help AI Learn - Is this prediction correct?',
+                correctBtn: 'Correct',
+                wrongBtn: 'Incorrect',
+                skipBtn: 'Skip',
+                selectBreedTitle: 'Please select the correct breed:',
+                selectBreedPlaceholder: '-- Select breed --',
+                submitFeedbackBtn: 'Submit Feedback',
+                backBtn: 'Back',
+                thankYouTitle: 'Thank you for your feedback!',
+                thankYouSubtitle: 'Your input helps improve AI accuracy',
+                skipFeedbackTitle: 'Feedback Skipped',
+                skipFeedbackSubtitle: 'No problem, you can try uploading another image',
+                footer: 'Powered by ResNet50 Deep Learning Model',
+                alertSelectImage: 'Please select an image first',
+                alertImageOnly: 'Please select image files only',
+                alertSelectBreed: 'Please select the correct breed',
+                alertConnectionError: 'Connection error. Please try again.',
+                alertFeedbackError: 'Error submitting feedback',
+                years: 'years'
+            }
+        };
+        
+        function t(key) {
+            return translations[currentLanguage]?.[key] || translations['en'][key] || key;
+        }
+        
+        function updateUILanguage() {
+            // Update page title
+            document.title = t('pageTitle');
+            
+            // Update header subtitle (logo doesn't need update)
+            document.querySelector('.header-subtitle').textContent = t('headerSubtitle');
+            
+            // Update loading overlay
+            document.querySelector('#loadingOverlay h4').textContent = t('loadingTitle');
+            document.querySelector('#loadingOverlay p').textContent = t('loadingSubtitle');
+            
+            // Update drop zone
+            document.querySelector('#dropZone h4').textContent = t('dropZoneTitle');
+            document.querySelector('#dropZone p').textContent = t('dropZoneSubtitle');
+            
+            // Update buttons
+            document.querySelector('#predictBtn').innerHTML = `<i class="fas fa-search me-2"></i>${t('analyzeBtn')}`;
+            document.querySelector('#resetBtn').innerHTML = `<i class="fas fa-redo me-2"></i>${t('resetBtn')}`;
+            
+            // Update results section
+            document.querySelector('.top-result .confidence').innerHTML = `${t('confidence')}: <span id="topConfidence">${document.getElementById('topConfidence').textContent}</span>`;
+            
+            // Update breed info section
+            document.querySelector('.breed-info-header h5').textContent = t('breedInfoTitle');
+            document.querySelectorAll('.breed-stat-label')[0].textContent = t('lifeSpan');
+            document.querySelectorAll('.breed-stat-label')[1].textContent = t('weight');
+            document.querySelectorAll('.breed-stat-label')[2].textContent = t('allergy');
+            document.querySelector('#noBreedInfo p').textContent = t('noBreedInfo');
+            
+            // Update top 5 title
+            document.querySelector('.result-card > h5').innerHTML = `<i class="fas fa-list-ol me-2"></i>${t('top5Results')}`;
+            
+            // Update feedback section
+            document.querySelector('.feedback-title').innerHTML = `<i class="fas fa-comment-dots me-2"></i>${t('feedbackTitle')}`;
+            document.querySelector('#btnCorrect').innerHTML = `<i class="fas fa-check me-2"></i>${t('correctBtn')}`;
+            document.querySelector('#btnWrong').innerHTML = `<i class="fas fa-times me-2"></i>${t('wrongBtn')}`;
+            document.querySelector('#btnSkip').innerHTML = `<i class="fas fa-forward me-2"></i>${t('skipBtn')}`;
+            
+            // Update correction section
+            document.querySelector('#correctionSection h6').innerHTML = `<i class="fas fa-edit me-2"></i>${t('selectBreedTitle')}`;
+            document.querySelector('#breedSelect option[value=""]').textContent = t('selectBreedPlaceholder');
+            document.querySelector('#btnSubmitCorrection').innerHTML = `<i class="fas fa-paper-plane me-2"></i>${t('submitFeedbackBtn')}`;
+            document.querySelector('#btnCancelCorrection').innerHTML = `<i class="fas fa-arrow-left me-2"></i>${t('backBtn')}`;
+            
+            // Update footer
+            document.querySelector('.footer p').innerHTML = `<i class="fas fa-brain me-2"></i>${t('footer')}`;
+            
+            // Update hypoallergenic text if visible
+            const breedHypo = document.getElementById('breedHypo');
+            if (breedHypo.textContent !== '-') {
+                const hypoIcon = document.getElementById('hypoIcon');
+                if (hypoIcon.classList.contains('no')) {
+                    breedHypo.textContent = t('notHypoallergenic');
+                } else {
+                    breedHypo.textContent = t('hypoallergenic');
+                }
+            }
+            
+            // Update life span unit if visible
+            const breedLifeSpan = document.getElementById('breedLifeSpan');
+            if (breedLifeSpan.textContent !== '-' && breedLifeSpan.dataset.min) {
+                breedLifeSpan.textContent = `${breedLifeSpan.dataset.min} - ${breedLifeSpan.dataset.max} ${t('years')}`;
+            }
+        }
+        
+        // ==================== Main App Code ====================
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const uploadForm = document.getElementById('uploadForm');
+        const predictBtn = document.getElementById('predictBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        // Feedback elements
+        const feedbackSection = document.getElementById('feedbackSection');
+        const feedbackButtons = document.getElementById('feedbackButtons');
+        const correctionSection = document.getElementById('correctionSection');
+        const feedbackSuccess = document.getElementById('feedbackSuccess');
+        const breedSelect = document.getElementById('breedSelect');
+        
+        // Store current prediction data
+        let currentPrediction = null;
+        let allBreeds = [];
+        
+        // Load all breeds for correction dropdown
+        async function loadBreeds() {
+            try {
+                const response = await fetch('/breeds');
+                const data = await response.json();
+                allBreeds = data.breeds;
+                
+                // Populate dropdown
+                breedSelect.innerHTML = `<option value="">${t('selectBreedPlaceholder')}</option>`;
+                allBreeds.forEach(breed => {
+                    const option = document.createElement('option');
+                    option.value = breed.class_key;
+                    option.textContent = breed.breed_name;
+                    breedSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading breeds:', error);
+            }
+        }
+        
+        // Initialize
+        loadBreeds();
+        
+        // Drop zone click
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        // Drag and drop events
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+        
+        // Handle file selection
+        function handleFileSelect(file) {
+            if (!file.type.startsWith('image/')) {
+                alert(t('alertImageOnly'));
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                dropZone.style.display = 'none';
+                previewContainer.style.display = 'block';
+                resultsSection.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            // Clean up image on server if feedback not given
+            if (currentPrediction && currentPrediction.image_filename) {
+                fetch('/skip_feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_filename: currentPrediction.image_filename })
+                });
+            }
+            
+            fileInput.value = '';
+            previewImage.src = '';
+            dropZone.style.display = 'block';
+            previewContainer.style.display = 'none';
+            resultsSection.style.display = 'none';
+            currentPrediction = null;
+            resetFeedbackUI();
+        });
+        
+        function resetFeedbackUI() {
+            feedbackButtons.style.display = 'flex';
+            correctionSection.style.display = 'none';
+            feedbackSuccess.style.display = 'none';
+            breedSelect.value = '';
+        }
+        
+        // Form submit
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!fileInput.files.length) {
+                alert(t('alertSelectImage'));
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            // Show loading
+            loadingOverlay.style.display = 'flex';
+            predictBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                // Display results
+                displayResults(data);
+                
+                // Store prediction data for feedback
+                currentPrediction = data;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert(t('alertConnectionError'));
+            } finally {
+                loadingOverlay.style.display = 'none';
+                predictBtn.disabled = false;
+            }
+        });
+        
+        // Display results
+        function displayResults(data) {
+            // Top result
+            document.getElementById('topBreed').textContent = data.top_breed;
+            document.getElementById('topConfidence').textContent = data.top_confidence;
+            
+            // Display breed info
+            displayBreedInfo(data.top_breed_info);
+            
+            // Predictions list
+            const predictionsList = document.getElementById('predictionsList');
+            predictionsList.innerHTML = '';
+            
+            data.predictions.forEach((pred, index) => {
+                const item = document.createElement('div');
+                item.className = 'prediction-item';
+                item.innerHTML = `
+                    <div class="prediction-rank">${index + 1}</div>
+                    <div class="prediction-info">
+                        <div class="prediction-breed">${pred.breed}</div>
+                        <div class="prediction-bar">
+                            <div class="prediction-bar-fill" style="width: ${pred.probability * 100}%"></div>
+                        </div>
+                    </div>
+                    <div class="prediction-percent">${pred.percentage}</div>
+                `;
+                predictionsList.appendChild(item);
+            });
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset feedback UI
+            resetFeedbackUI();
+        }
+        
+        // Display breed information
+        function displayBreedInfo(info) {
+            const breedInfoSection = document.getElementById('breedInfoSection');
+            const noBreedInfo = document.getElementById('noBreedInfo');
+            const breedDescription = document.getElementById('breedDescription');
+            const breedLifeSpan = document.getElementById('breedLifeSpan');
+            const breedWeight = document.getElementById('breedWeight');
+            const breedHypo = document.getElementById('breedHypo');
+            const hypoIcon = document.getElementById('hypoIcon');
+            
+            // Show section
+            breedInfoSection.style.display = 'block';
+            
+            if (!info) {
+                // No info available
+                breedDescription.parentElement.style.display = 'none';
+                document.querySelector('.breed-stats').style.display = 'none';
+                noBreedInfo.style.display = 'block';
+                return;
+            }
+            
+            // Show info
+            noBreedInfo.style.display = 'none';
+            
+            // Description
+            if (info.description) {
+                breedDescription.textContent = info.description;
+                breedDescription.parentElement.style.display = 'block';
+            } else {
+                breedDescription.parentElement.style.display = 'none';
+            }
+            
+            // Show stats section
+            document.querySelector('.breed-stats').style.display = 'grid';
+            
+            // Life span (handle both formats: life.min/max and life_min/max)
+            const lifeMin = info.life?.min || info.life_min;
+            const lifeMax = info.life?.max || info.life_max;
+            if (lifeMin && lifeMax) {
+                breedLifeSpan.textContent = `${lifeMin} - ${lifeMax} ${t('years')}`;
+                breedLifeSpan.dataset.min = lifeMin;
+                breedLifeSpan.dataset.max = lifeMax;
+                document.getElementById('lifeSpanCard').style.display = 'flex';
+            } else {
+                document.getElementById('lifeSpanCard').style.display = 'none';
+            }
+            
+            // Weight (handle both formats)
+            let weightText = '';
+            const maleWeightMin = info.male_weight?.min || info.male_weight_min;
+            const maleWeightMax = info.male_weight?.max || info.male_weight_max;
+            const femaleWeightMin = info.female_weight?.min || info.female_weight_min;
+            const femaleWeightMax = info.female_weight?.max || info.female_weight_max;
+            
+            if (maleWeightMin && maleWeightMax) {
+                weightText = `${maleWeightMin} - ${maleWeightMax} kg`;
+            } else if (femaleWeightMin && femaleWeightMax) {
+                weightText = `${femaleWeightMin} - ${femaleWeightMax} kg`;
+            }
+            
+            if (weightText) {
+                breedWeight.textContent = weightText;
+                document.getElementById('weightCard').style.display = 'flex';
+            } else {
+                document.getElementById('weightCard').style.display = 'none';
+            }
+            
+            // Hypoallergenic
+            if (info.hypoallergenic !== undefined) {
+                if (info.hypoallergenic) {
+                    breedHypo.textContent = t('hypoallergenic');
+                    hypoIcon.className = 'breed-stat-icon hypo';
+                } else {
+                    breedHypo.textContent = t('notHypoallergenic');
+                    hypoIcon.className = 'breed-stat-icon hypo no';
+                }
+                document.getElementById('hypoCard').style.display = 'flex';
+            } else {
+                document.getElementById('hypoCard').style.display = 'none';
+            }
+        }
+        
+        // Feedback: Correct
+        document.getElementById('btnCorrect').addEventListener('click', async () => {
+            if (!currentPrediction) return;
+            
+            loadingOverlay.style.display = 'flex';
+            
+            try {
+                const response = await fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_id: currentPrediction.image_id,
+                        image_filename: currentPrediction.image_filename,
+                        is_correct: true,
+                        predicted_breed: currentPrediction.top_breed,
+                        predicted_class_key: currentPrediction.predictions[0].class_key
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    feedbackButtons.style.display = 'none';
+                    feedbackSuccess.innerHTML = `
+                        <i class="fas fa-heart"></i>
+                        <h5>${t('thankYouTitle')}</h5>
+                        <p class="mb-0">${t('thankYouSubtitle')}</p>
+                    `;
+                    feedbackSuccess.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                    feedbackSuccess.style.display = 'block';
+                    currentPrediction = null;
+                } else {
+                    alert(data.error || t('alertFeedbackError'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(t('alertFeedbackError'));
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        });
+        
+        // Feedback: Wrong - show correction options
+        document.getElementById('btnWrong').addEventListener('click', () => {
+            feedbackButtons.style.display = 'none';
+            correctionSection.style.display = 'block';
+        });
+        
+        // Cancel correction
+        document.getElementById('btnCancelCorrection').addEventListener('click', () => {
+            correctionSection.style.display = 'none';
+            feedbackButtons.style.display = 'flex';
+        });
+        
+        // Submit correction
+        document.getElementById('btnSubmitCorrection').addEventListener('click', async () => {
+            if (!currentPrediction) return;
+            
+            const selectedBreed = breedSelect.value;
+            if (!selectedBreed) {
+                alert(t('alertSelectBreed'));
+                return;
+            }
+            
+            loadingOverlay.style.display = 'flex';
+            
+            try {
+                // Find breed name from class key
+                const breedInfo = allBreeds.find(b => b.class_key === selectedBreed);
+                
+                const response = await fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_id: currentPrediction.image_id,
+                        image_filename: currentPrediction.image_filename,
+                        is_correct: false,
+                        predicted_breed: currentPrediction.top_breed,
+                        predicted_class_key: currentPrediction.predictions[0].class_key,
+                        correct_breed: breedInfo ? breedInfo.breed_name : selectedBreed,
+                        correct_class_key: selectedBreed
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    correctionSection.style.display = 'none';
+                    feedbackSuccess.innerHTML = `
+                        <i class="fas fa-heart"></i>
+                        <h5>${t('thankYouTitle')}</h5>
+                        <p class="mb-0">${t('thankYouSubtitle')}</p>
+                    `;
+                    feedbackSuccess.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                    feedbackSuccess.style.display = 'block';
+                    currentPrediction = null;
+                } else {
+                    alert(data.error || t('alertFeedbackError'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(t('alertFeedbackError'));
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        });
+        
+        // Skip feedback
+        document.getElementById('btnSkip').addEventListener('click', async () => {
+            if (currentPrediction && currentPrediction.image_filename) {
+                try {
+                    await fetch('/skip_feedback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image_filename: currentPrediction.image_filename })
+                    });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            
+            feedbackButtons.style.display = 'none';
+            feedbackSuccess.innerHTML = `
+                <i class="fas fa-forward"></i>
+                <h5>${t('skipFeedbackTitle')}</h5>
+                <p class="mb-0">${t('skipFeedbackSubtitle')}</p>
+            `;
+            feedbackSuccess.style.background = '#94a3b8';
+            feedbackSuccess.style.display = 'block';
+            currentPrediction = null;
+        });
+        
+        // Language switching
+        let currentLanguage = 'th';
+        
+        // Initialize language from server
+        async function initLanguage() {
+            try {
+                const response = await fetch('/language');
+                const data = await response.json();
+                currentLanguage = data.language || 'th';
+                updateLanguageButtons();
+                updateUILanguage();
+            } catch (error) {
+                console.error('Error loading language:', error);
+            }
+        }
+        
+        function updateLanguageButtons() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.dataset.lang === currentLanguage) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Language button click handlers
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const lang = btn.dataset.lang;
+                if (lang === currentLanguage) return;
+                
+                try {
+                    const response = await fetch('/language', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ language: lang })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        currentLanguage = data.language;
+                        updateLanguageButtons();
+                        updateUILanguage();
+                        
+                        // Re-fetch breed info if results are currently displayed
+                        if (currentPrediction && resultsSection.style.display === 'block') {
+                            refreshBreedInfo();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error changing language:', error);
+                }
+            });
+        });
+        
+        // Refresh breed info with new language
+        async function refreshBreedInfo() {
+            if (!currentPrediction || !currentPrediction.top_breed) return;
+            
+            try {
+                loadingOverlay.style.display = 'flex';
+                
+                // Fetch breed info directly using the breed name
+                const breedName = encodeURIComponent(currentPrediction.top_breed);
+                const response = await fetch(`/breed-info/${breedName}`);
+                const data = await response.json();
+                
+                if (data.success && data.breed_info) {
+                    // Update breed info display with new language
+                    displayBreedInfo(data.breed_info);
+                    currentPrediction.top_breed_info = data.breed_info;
+                }
+            } catch (error) {
+                console.error('Error refreshing breed info:', error);
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+        
+        // Initialize on page load
+        initLanguage();
+    </script>
+</body>
+</html>
